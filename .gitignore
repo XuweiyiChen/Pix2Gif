@@ -1,0 +1,7 @@
+*.ckpt
+*.pt
+stable_diffusion/data
+stable_diffusion/assets
+*.ipynb
+__pycache__/
+*.pyc
