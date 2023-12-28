@@ -46,12 +46,6 @@ class ClipSimilarity(nn.Module):
         # Convert the normalized tensor back to the common range (0, 255)  
         image = ((tensor + 1) * 255 / 2).clamp(0, 255).unsqueeze(0)
         return image.int()
-
-    # def encode_text(self, text: list[str]) -> torch.Tensor:
-    #     text = clip.tokenize(text, truncate=True).to(next(self.parameters()).device)
-    #     text_features = self.model.encode_text(text)
-    #     text_features = text_features / text_features.norm(dim=1, keepdim=True)
-    #     return text_features
   
     def calculate_optical_flow_new(self, image_list):  
         # Initialize list to hold optical flow  
@@ -171,8 +165,6 @@ class ClipSimilarity(nn.Module):
 
     def encode_video(self, images: list[torch.Tensor], text: list[str]):
         video = torch.cat(images, dim=0)
-        # image_0, image_gen = self.denormalize_image(image_0), self.denormalize_image(image_gen)
-        # video = self.repeat_and_concat([image_0, image_gen])
         inputs = self.x_processor(text=text, videos=list(video), return_tensors="pt", padding=True)
         # forward pass
         inputs["input_ids"] = inputs["input_ids"].to(self.device)
@@ -193,14 +185,4 @@ class ClipSimilarity(nn.Module):
         sim_video_1 = F.cosine_similarity(image_features_1, video_features)
         optical_flow = self.calculate_optical_flow_old(img_list)
         optical_flow_img = self.calculate_optical_flow_image(img_list, image_0)
-        # image_features_gen = self.encode_image(image_gen)
-        # text_features = self.encode_text(text)
-        # text_features_1 = self.encode_text(text_1)
-        # sim_0 = F.cosine_similarity(image_features_0, text_features)
-        # sim_1 = F.cosine_similarity(image_features_1, text_features)
-        # sim_gen = F.cosine_similarity(image_features_gen, text_features)
-        # sim_direction = F.cosine_similarity(image_features_1 - image_features_0, text_features)
-        # sim_image_0 = F.cosine_similarity(image_features_0, image_features_gen)
-        # sim_image_1 = F.cosine_similarity(image_features_1, image_features_gen)
-
         return sim_video_0, sim_video_1, optical_flow, optical_flow_img

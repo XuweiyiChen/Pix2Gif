@@ -101,7 +101,7 @@ class ImageEditor(nn.Module):
         assert image.size(1) % 32 == 0
         assert image.size(2) % 32 == 0
         word_interval = number_to_words(interval)
-        edit = " ".join(edit.split(" ")[:-2]) # removed [space]four.[space]4
+        edit = " ".join(edit.split(" ")[:-2])
         edit = f"{edit} {word_interval}."
         with torch.no_grad(), autocast("cuda"), self.model.ema_scope():
             cond = {
@@ -205,25 +205,6 @@ def compute_metrics(config,
                 f.write(f"{json.dumps(dict(sim_video_0=sim_video_0_avg, sim_video_1=sim_video_1_avg, flow=flow_avg.tolist(), flow_img=flow_img_avg.tolist(), num_samples=num_samples, split=split, scale_txt=scale_txt, scale_img=scale_img, steps=steps, res=res, seed=seed))}\n")
     return outpath
 
-# def plot_metrics(metrics_file, output_path):
-    
-#     with open(metrics_file, 'r') as f:
-#         data = [json.loads(line) for line in f]
-        
-#     plt.rcParams.update({'font.size': 11.5})
-#     seaborn.set_style("darkgrid")
-#     plt.figure(figsize=(20.5* 0.7, 10.8* 0.7), dpi=200)
-
-#     x = [d["sim_gen"] for d in data]
-#     y = [d["sim_image"] for d in data]
-
-#     plt.plot(x, y, marker='o', linewidth=2, markersize=4)
-
-#     plt.xlabel("CLIP Text-Image Direction Similarity", labelpad=10)
-#     plt.ylabel("CLIP Image Similarity", labelpad=10)
-
-#     plt.savefig(Path(output_path) / Path("plot.pdf"), bbox_inches="tight")
-
 def main():
     parser = ArgumentParser()
     parser.add_argument("--resolution", default=256, type=int)
@@ -235,7 +216,6 @@ def main():
     parser.add_argument("--vae-ckpt", default=None, type=str)
     args = parser.parse_args()
 
-    # scales_img = [2.2, 2.4, 2.6, 2.8, 3.0]
     scales_img = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
     scales_txt = [7.5]
     scales_motion = [2, 4, 6, 8, 11, 14, 17, 19]
@@ -252,45 +232,5 @@ def main():
             steps = args.steps,
             )
     
-    # plot_metrics(metrics_file, args.output_path)
-
 if __name__ == "__main__":
     main()
-  
-# def worker(scale_img, gpu_id):  
-#     # Set environment variable to select specific GPU  
-#     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  
-#     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)  
-      
-#     # You may want to adjust batch size or other settings based on the GPU  
-#     scales_txt = [7.5]  
-#     scales_motion = [2, 4, 6, 8, 11, 14, 17, 19]  
-#     args = ArgumentParser().parse_args(["--resolution", "256", "--steps", "100", "--config", "configs/generate.yaml", "--output_path", "analysis/", "--ckpt", "/mnt/model/instruct-p2p/motioninterval-tgif-per-all_concat/train_motioninterval-tgif-per-all_concat/checkpoints/trainstep_checkpoints/epoch=000004-step=000013999.ckpt", "--dataset", "data/clip-filtered-dataset/"])  
-      
-#     metrics_file = compute_metrics(  
-#         args.config,  
-#         args.ckpt,   
-#         args.vae_ckpt,  
-#         args.dataset,   
-#         args.output_path,   
-#         [scale_img],  # only one scale_img value  
-#         scales_txt,  
-#         scales_motion,  
-#         steps=args.steps,  
-#     )  
-#     # plot_metrics(metrics_file, args.output_path)  
-  
-# if __name__ == "__main__":  
-#     scales_img = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0]  
-#     num_gpus = 16  # get number of available GPUs  
-  
-#     # Create a process for each GPU  
-#     processes = []  
-#     for i, scale_img in enumerate(scales_img):  
-#         p = multiprocessing.Process(target=worker, args=(scale_img, i % num_gpus))  
-#         p.start()  
-#         processes.append(p)  
-  
-#     # Wait for all processes to finish  
-#     for p in processes:  
-#         p.join()  
