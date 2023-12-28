@@ -1,5 +1,7 @@
 # Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation
-:orange: \[[Project Page](https://hiteshk03.github.io/)\]
+![teaser_op](https://github.com/hiteshK03/Pix2Gif/assets/45922320/3d8ca72e-b2f3-48fd-a732-574987454fd3)
+
+:grapes: \[[arXiv](https://github.com/hiteshK03/Pix2Gif/)\] &nbsp; :orange: \[[Project Page](https://hiteshk03.github.io/)\]
 
 [Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Jianwei Yang](https://jwyang.github.io/)<sup>2</sup>
 <br> Microsoft Research India<sup>1</sup>, Microsoft Research Redmond<sup>2</sup>
@@ -13,8 +15,8 @@ pip install -r requirements.txt
 ```
 
 ## Demo
+![github_demo](https://github.com/hiteshK03/Pix2Gif/assets/45922320/e3b1605c-b8e2-4ab7-8329-17d0b611e68b)
 This demo takes in an image and a caption and generates a Gif following the input caption. To launch the demo, run:
-
 ```bash
 python demo.py
 ```
