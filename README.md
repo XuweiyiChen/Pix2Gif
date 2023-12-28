@@ -1,7 +1,7 @@
 # Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation
 :orange: \[[Project Page](https://hiteshk03.github.io/)\]
 
-[Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Alexei A. Efros](https://jwyang.github.io/)<sup>2</sup>
+[Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Jianwei Yang](https://jwyang.github.io/)<sup>2</sup>
 <br> Microsoft Research India<sup>1</sup>, Microsoft Research Redmond<sup>2</sup>
 
 ## Setup
