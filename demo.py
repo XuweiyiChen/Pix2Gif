@@ -173,8 +173,8 @@ def main():
             instruction = gr.Textbox(lines=1, label="Edit Instruction", interactive=True)
 
         with gr.Row():
-            input_image = gr.Image(label="Input Image", type="pil", interactive=True, height=512, width=512)
-            output_gif = gr.Image(label=f"Generated GIF", type="pil", interactive=False, height=512, width=512)
+            input_image = gr.Image(label="Input Image", type="pil", interactive=True, height=768, width=768)
+            output_gif = gr.Image(label=f"Generated GIF", type="pil", interactive=False, height=768, width=768)
 
         with gr.Row():
             steps = gr.Number(value=100, precision=0, label="Steps", interactive=True)
