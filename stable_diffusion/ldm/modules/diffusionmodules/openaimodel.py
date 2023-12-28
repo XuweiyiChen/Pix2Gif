@@ -20,7 +20,6 @@ from ldm.modules.diffusionmodules.util import (
     deconv,
     predict_flow,
     i_conv,
-    initialize_msra
 )
 from ldm.modules.attention import SpatialTransformer
 
@@ -89,9 +88,9 @@ class InjectionModule(nn.Module):
         self.relu = nn.ReLU()
   
     def forward(self, x):
-        bs = x.shape[0] # x: 3x77x768
+        bs = x.shape[0]
 
-        x = self.linear(x) # 3x16x256
+        x = self.linear(x)
         x = x.transpose(1, 2)  
         x = self.norm(x)  
         x = self.relu(x)  
@@ -99,35 +98,6 @@ class InjectionModule(nn.Module):
         x = x.view(bs, -1, self.size, self.size)  # Reshape the tensor to (8, 16, 1024)  
   
         return x
-
-# class InjectionModule(nn.Module):  
-#     def __init__(self, size):  
-#         super(InjectionModule, self).__init__()  
-#         self.size = size
-#         self.linear1 = nn.Linear(77 * 768, self.size**2)  
-#         self.norm1 = nn.LayerNorm(self.size**2)  
-#         self.relu1 = nn.ReLU()  
-  
-#         self.linear2 = nn.Linear(self.size**2, self.size * (self.size**2))  
-#         self.norm2 = nn.LayerNorm(self.size * (self.size**2))  
-#         self.relu2 = nn.ReLU()  
-  
-#     def forward(self, x):  
-#         bs = x.shape[0]
-
-#         x = x.view(bs, -1)  # Flatten the last two dimensions  
-  
-#         x = self.linear1(x)  
-#         x = self.norm1(x)  
-#         x = self.relu1(x)  
-  
-#         x = self.linear2(x)  
-#         x = self.norm2(x)  
-#         x = self.relu2(x)  
-  
-#         x = x.view(bs, self.size, self.size, self.size)  # Reshape the tensor to (8, 16, 1024)  
-  
-#         return x
 
 class FlowNet(nn.Module):
     def __init__(self, ngf, norm=nn.BatchNorm2d, x=3):
@@ -156,7 +126,6 @@ class FlowNet(nn.Module):
         self.injection1 = InjectionModule(ngf // 4)
 
     def forward(self, x, cond):
-        # inputxy = X
         out_conv0 = self.conv0(x)  # output: B*(ngf)*32*32
         out_conv1 = self.conv1_1(self.conv1(out_conv0))  # output: B*(ngf*2)*16*16
         out_conv2 = self.conv2_1(self.conv2(out_conv1))  # output: B*(ngf*2)*8*8
