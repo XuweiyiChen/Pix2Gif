@@ -25,11 +25,10 @@ python demo.py
 We build our work on top of [InstructPix2Pix](https://github.com/timothybrooks/instruct-pix2pix)
 
 ## Citation
-<!-- ```
-@article{zou2022xdecoder,
-  author      = {Zou*, Xueyan and Dou*, Zi-Yi and Yang*, Jianwei and Gan, Zhe and Li, Linjie and Li, Chunyuan and Dai, Xiyang and Wang, Jianfeng and Yuan, Lu and Peng, Nanyun and Wang, Lijuan and Lee*, Yong Jae and Gao*, Jianfeng},
-  title       = {Generalized Decoding for Pixel, Image and Language},
-  publisher   = {arXiv},
-  year        = {2022},
-}
-``` -->
+```bibtex
+@article{kandala2023pix2gif,
+    title={Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation},
+    author={Kandala, Hitesh and Yang, Jianwei},
+    journal={arXiv preprint},
+    year={2024}
+  }
