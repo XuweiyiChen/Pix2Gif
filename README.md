@@ -1,7 +1,8 @@
 # Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation
 ![teaser_op](https://github.com/hiteshK03/Pix2Gif/assets/45922320/3d8ca72e-b2f3-48fd-a732-574987454fd3)
 
-:grapes: \[[arXiv](https://github.com/hiteshK03/Pix2Gif/)\] &nbsp; :orange: \[[Project Page](https://hiteshk03.github.io/)\]
+<!-- :grapes: \[[arXiv](https://github.com/hiteshK03/Pix2Gif/)\] &nbsp;  -->
+:orange: \[[Project Page](https://hiteshk03.github.io/Pix2Gif/)\]
 
 [Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Jianwei Yang](https://jwyang.github.io/)<sup>2</sup>
 <br> Microsoft Research India<sup>1</sup>, Microsoft Research Redmond<sup>2</sup>
@@ -26,7 +27,7 @@ We build our work on top of [InstructPix2Pix](https://github.com/timothybrooks/i
 
 ## Citation
 ```bibtex
-@article{kandala2023pix2gif,
+@article{kandala2024pix2gif,
     title={Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation},
     author={Kandala, Hitesh and Yang, Jianwei},
     journal={arXiv preprint},
