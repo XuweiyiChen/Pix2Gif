@@ -4,7 +4,7 @@
 <!-- :grapes: \[[arXiv](https://github.com/hiteshK03/Pix2Gif/)\] &nbsp;  -->
 :orange: \[[Project Page](https://hiteshk03.github.io/Pix2Gif/)\]
 
-[Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Jianwei Yang](https://jwyang.github.io/)<sup>2</sup>
+[Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Jianfeng Gao](https://www.microsoft.com/en-us/research/people/jfgao/)<sup>2</sup>, [Jianwei Yang](https://jwyang.github.io/)<sup>2</sup>
 <br> Microsoft Research India<sup>1</sup>, Microsoft Research Redmond<sup>2</sup>
 
 ## Setup
@@ -29,7 +29,7 @@ We build our work on top of [InstructPix2Pix](https://github.com/timothybrooks/i
 ```bibtex
 @article{kandala2024pix2gif,
     title={Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation},
-    author={Kandala, Hitesh and Yang, Jianwei},
+    author={Kandala, Hitesh and Gao, Jianfeng and Yang, Jianwei},
     journal={arXiv preprint},
     year={2024}
   }
