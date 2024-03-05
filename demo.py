@@ -19,7 +19,6 @@ from einops import rearrange
 from omegaconf import OmegaConf
 from PIL import Image, ImageOps
 from torch import autocast
-from consistencydecoder import ConsistencyDecoder
 
 sys.path.append("./stable_diffusion")
 
@@ -37,7 +36,7 @@ class CFGDenoiser(nn.Module):
             "c_crossattn": [torch.cat([cond["c_crossattn"][0], uncond["c_crossattn"][0], uncond["c_crossattn"][0]]), cond["c_crossattn"][1]],
             "c_concat": [torch.cat([cond["c_concat"][0], cond["c_concat"][0], uncond["c_concat"][0]])],
         }
-        out_cond, out_img_cond, out_uncond = self.inner_model(cfg_z, cfg_sigma, cond=cfg_cond).chunk(3)
+        out_cond, out_img_cond, out_uncond = self.inner_model(cfg_z, cfg_sigma, cond=cfg_cond)
         return out_uncond + text_cfg_scale * (out_cond - out_img_cond) + image_cfg_scale * (out_img_cond - out_uncond)
 
 
@@ -68,14 +67,13 @@ def load_model_from_config(config, ckpt, vae_ckpt=None, verbose=False):
 def main():
     parser = ArgumentParser()
     parser.add_argument("--config", default="configs/generate.yaml", type=str)
-    parser.add_argument("--ckpt", default="/home/t-hkandala/MSRR/model/instruct-p2p/motioninterval-tgif-all_cat-only_per/train_motioninterval-tgif-all_cat-only_per/checkpoints/trainstep_checkpoints/epoch=000007-step=000023999.ckpt", type=str)
+    parser.add_argument("--ckpt", default="/home/t-hkandala/MSRR/model/instruct-p2p/motioninterval-tgif-per-2_20-forward/train_motioninterval-tgif-per-2_20-forward/checkpoints/trainstep_checkpoints/epoch=000006-step=000020999.ckpt", type=str)
     parser.add_argument("--vae_ckpt", default=None, type=str)
     args = parser.parse_args()
 
     config = OmegaConf.load(args.config)
     model = load_model_from_config(config, args.ckpt, args.vae_ckpt)
     model.eval().to(device="cuda:0")
-    decoder_consistency = ConsistencyDecoder(device="cuda:0")
     model_wrap = K.external.CompVisDenoiser(model)
     model_wrap_cfg = CFGDenoiser(model_wrap)
     null_token = model.get_learned_conditioning([""])
@@ -100,8 +98,6 @@ def main():
         text_cfg_scale: float,
         image_cfg_scale: float,
     ):
-        scale_factor = 0.18215
-
         width, height = input_image.size
         input_image = input_image.resize((resolution, resolution))
 
@@ -133,18 +129,18 @@ def main():
             torch.manual_seed(seed)
             z = torch.randn_like(cond["c_concat"][0]) * sigmas[0]
             z = K.sampling.sample_euler_ancestral(model_wrap_cfg, z, sigmas, extra_args=extra_args)
-            z = 1. / scale_factor * z
-            x = decoder_consistency(z)
-            x = x[0].cpu().numpy()
-            x = (x + 1.0) * 127.5
-            x = x.clip(0, 255).astype(np.uint8)
-            edited_image = Image.fromarray(x.transpose(1, 2, 0))
+            x = model.decode_first_stage(z)
+            x = torch.clamp((x + 1.0) / 2.0, min=0.0, max=1.0)
+            x = 255.0 * rearrange(x, "1 c h w -> h w c")
+            edited_image = Image.fromarray(x.type(torch.uint8).cpu().numpy())
             edited_image = edited_image.resize((width, height))
+
             return edited_image
 
     def generate_gif(
         input_image: Image.Image,
         instruction: str,
+        cfg_motion: str,
         steps: int,
         seed: int,
         text_cfg_scale: float,
@@ -159,7 +155,7 @@ def main():
         output_dir = "output/"
         inter_img = input_image
         output_name = f"{cap}_{steps}_{seed}_{text_cfg_scale}_{image_cfg_scale}"
-        cfg_motion = [2,4,6,8,11,13,16,19]
+        cfg_motion = [int(num.strip()) for num in cfg_motion.split(',')]
         for motion in cfg_motion:
             inter_img = generate(input_image, instruction, motion, steps, seed, text_cfg_scale, image_cfg_scale)
             img_list.append(inter_img)
@@ -171,6 +167,7 @@ def main():
         
         with gr.Row():
             instruction = gr.Textbox(lines=1, label="Edit Instruction", interactive=True)
+            cfg_motion = gr.Textbox(value="2,4,6,8,11,13,16,19", lines=1, placeholder="Enter numbers separated by commas (e.g., 2,4,6,8,10)", label="Motion List", interactive=True)
 
         with gr.Row():
             input_image = gr.Image(label="Input Image", type="pil", interactive=True, height=768, width=768)
@@ -180,7 +177,7 @@ def main():
             steps = gr.Number(value=100, precision=0, label="Steps", interactive=True)
             seed = gr.Number(value=1371, precision=0, label="Seed", interactive=True)
             text_cfg_scale = gr.Number(value=7.5, label=f"Text CFG", interactive=True)
-            image_cfg_scale = gr.Number(value=2, label=f"Image CFG", interactive=True)
+            image_cfg_scale = gr.Number(value=1.8, label=f"Image CFG", interactive=True)
 
         with gr.Row():
             generate_gif_button = gr.Button("Generate GIF")
@@ -190,6 +187,7 @@ def main():
             inputs=[
                 input_image,
                 instruction,
+                cfg_motion,
                 steps,
                 seed,
                 text_cfg_scale,
@@ -198,7 +196,6 @@ def main():
             outputs=output_gif,
         )
 
-    demo.queue(concurrency_count=1)
     demo.launch(share=True)
 
 if __name__ == "__main__":

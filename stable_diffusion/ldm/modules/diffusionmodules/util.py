@@ -213,7 +213,7 @@ class SiLU(nn.Module):
 
 class GroupNorm32(nn.GroupNorm):
     def forward(self, x):
-        return super().forward(x.float()).type(x.dtype)
+        return super().forward(x).type(x.dtype)
 
 def conv_nd(dims, *args, **kwargs):
     """
@@ -294,3 +294,21 @@ def i_conv(in_planes, out_planes, norm_layer, kernel_size=3, stride=1, bias=True
         norm_layer(out_planes),
         nn.LeakyReLU(0.2, inplace=True),
     )
+
+def initialize_msra(modules):
+    for layer in modules:
+        if isinstance(layer, nn.Conv2d):
+            nn.init.kaiming_normal_(layer.weight)
+            if layer.bias is not None:
+                nn.init.constant_(layer.bias, 0)
+
+        elif isinstance(layer, nn.ConvTranspose2d):
+            nn.init.kaiming_normal_(layer.weight)
+            if layer.bias is not None:
+                nn.init.constant_(layer.bias, 0)
+
+        elif isinstance(layer, nn.LeakyReLU):
+            pass
+
+        elif isinstance(layer, nn.Sequential):
+            pass

@@ -1,4 +1,4 @@
-# Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation
+# Pix2Gif: Motion-Guided Diffusion for GIF Generation
 ![teaser_op](https://github.com/hiteshK03/Pix2Gif/assets/45922320/3d8ca72e-b2f3-48fd-a732-574987454fd3)
 
 <!-- :grapes: \[[arXiv](https://github.com/hiteshK03/Pix2Gif/)\] &nbsp;  -->
@@ -12,7 +12,13 @@
 ```bash
 python3.10 -m venv .pix2gif
 source .pix2gif/bin/activate
+pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
+pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
+pip install git+https://github.com/crowsonkb/k-diffusion.git
+pip install taming-transformers-rom1504
+pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
 pip install -r requirements.txt
+bash scripts/download_pretrained_sd.sh
 ```
 
 ## Demo
@@ -28,7 +34,7 @@ We build our work on top of [InstructPix2Pix](https://github.com/timothybrooks/i
 ## Citation
 ```bibtex
 @article{kandala2024pix2gif,
-    title={Pix2Gif: Motion-Guided Autoregressive Diffusion for Gif Generation},
+    title={Pix2Gif: Motion-Guided Diffusion for GIF Generation},
     author={Kandala, Hitesh and Gao, Jianfeng and Yang, Jianwei},
     journal={arXiv preprint},
     year={2024}

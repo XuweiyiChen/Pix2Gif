@@ -6,7 +6,7 @@ from torch.autograd import Function, Variable
 
 def vgg19_4channel_input():  
     # Load the pre-trained VGG-19 model  
-    vgg19 = models.vgg19(pretrained=True)  
+    vgg19 = models.vgg19(pretrained=True)
       
     # Modify the first layer to accept 4 channels  
     original_first_layer = vgg19.features[0]  
@@ -52,6 +52,7 @@ def vgg19_feature_extractor():
   
 def perceptual_loss(input_img, warped_img, layer_indices=[0, 5, 10, 19, 28]): 
     feature_extractor = vgg19_feature_extractor().cuda()
+    # feature_extractor = feature_extractor.half()
     input_features = []  
     warped_features = []  
       

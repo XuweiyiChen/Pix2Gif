@@ -20,6 +20,7 @@ from ldm.modules.diffusionmodules.util import (
     deconv,
     predict_flow,
     i_conv,
+    initialize_msra
 )
 from ldm.modules.attention import SpatialTransformer
 
@@ -62,6 +63,7 @@ class AttentionPool2d(nn.Module):
         x = self.c_proj(x)
         return x[:, :, 0]
 
+
 class IntervalEmbedding(nn.Module):  
     def __init__(self, num_embeddings=1024, embedding_dim=768, device="cuda", max_length=77):  
         super(IntervalEmbedding, self).__init__()
@@ -70,14 +72,11 @@ class IntervalEmbedding(nn.Module):
         self.embedding = nn.Embedding(num_embeddings, embedding_dim)  
   
     def forward(self, input_interval):
-        # for param in self.parameters():
-        #     param.requires_grad = False
         if not th.is_tensor(input_interval):
             input_interval = th.tensor(input_interval)
         input_tensor = input_interval.unsqueeze(-1).to(self.device)
         output_embeddings = self.embedding(input_tensor)
-        final_embeddings = output_embeddings.repeat(1, self.max_length, 1) # 8*77*768
-        return final_embeddings
+        return output_embeddings
   
 class InjectionModule(nn.Module):  
     def __init__(self, size):  
@@ -95,7 +94,7 @@ class InjectionModule(nn.Module):
         x = self.norm(x)  
         x = self.relu(x)  
         x = x.transpose(1, 2)
-        x = x.view(bs, -1, self.size, self.size)  # Reshape the tensor to (8, 16, 1024)  
+        x = x.reshape(bs, -1, self.size, self.size)  # Reshape the tensor to (8, 16, 1024)  
   
         return x
 
@@ -783,7 +782,6 @@ class UNetModel(nn.Module):
             self.id_predictor = nn.Sequential(
             normalization(ch),
             conv_nd(dims, model_channels, n_embed, 1),
-            #nn.LogSoftmax(dim=1)  # change to cross_entropy and produce non-normalized logits
         )
 
     def convert_to_fp16(self):
