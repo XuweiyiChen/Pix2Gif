@@ -12,10 +12,6 @@
 ```bash
 python3.10 -m venv .pix2gif
 source .pix2gif/bin/activate
-pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
-pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
-pip install git+https://github.com/crowsonkb/k-diffusion.git
-pip install taming-transformers-rom1504
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
 pip install -r requirements.txt
 bash scripts/download_pretrained_sd.sh
