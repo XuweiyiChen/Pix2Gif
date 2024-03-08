@@ -67,7 +67,7 @@ def load_model_from_config(config, ckpt, vae_ckpt=None, verbose=False):
 def main():
     parser = ArgumentParser()
     parser.add_argument("--config", default="configs/generate.yaml", type=str)
-    parser.add_argument("--ckpt", default="/home/t-hkandala/MSRR/model/instruct-p2p/motioninterval-tgif-per-2_20-forward/train_motioninterval-tgif-per-2_20-forward/checkpoints/trainstep_checkpoints/epoch=000006-step=000020999.ckpt", type=str)
+    parser.add_argument("--ckpt", default="pix2gif.ckpt", type=str)
     parser.add_argument("--vae_ckpt", default=None, type=str)
     args = parser.parse_args()
 
@@ -153,6 +153,8 @@ def main():
         img_list = []
         cap = "-".join(instruction.split(" "))
         output_dir = "output/"
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         inter_img = input_image
         output_name = f"{cap}_{steps}_{seed}_{text_cfg_scale}_{image_cfg_scale}"
         cfg_motion = [int(num.strip()) for num in cfg_motion.split(',')]
