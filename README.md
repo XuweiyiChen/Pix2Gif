@@ -1,8 +1,8 @@
 # Pix2Gif: Motion-Guided Diffusion for GIF Generation
 ![teaser_op](https://github.com/hiteshK03/Pix2Gif/assets/45922320/3d8ca72e-b2f3-48fd-a732-574987454fd3)
 
-<!-- :grapes: \[[arXiv](https://github.com/hiteshK03/Pix2Gif/)\] &nbsp;  -->
-:orange: \[[Project Page](https://hiteshk03.github.io/Pix2Gif/)\]
+:grapes: \[[arXiv](https://arxiv.org/abs/2403.04634)\] &nbsp; :apple: \[[Demo](https://520a83a7524ec7d864.gradio.live/)\] &nbsp; :orange: \[[Project Page](https://hiteshk03.github.io/Pix2Gif/)\]
+
 
 [Hitesh Kandala](https://hiteshk03.github.io/)<sup>1</sup>, [Jianfeng Gao](https://www.microsoft.com/en-us/research/people/jfgao/)<sup>2</sup>, [Jianwei Yang](https://jwyang.github.io/)<sup>2</sup>
 <br> Microsoft Research India<sup>1</sup>, Microsoft Research Redmond<sup>2</sup>
@@ -29,9 +29,11 @@ We build our work on top of [InstructPix2Pix](https://github.com/timothybrooks/i
 
 ## Citation
 ```bibtex
-@article{kandala2024pix2gif,
-    title={Pix2Gif: Motion-Guided Diffusion for GIF Generation},
-    author={Kandala, Hitesh and Gao, Jianfeng and Yang, Jianwei},
-    journal={arXiv preprint},
-    year={2024}
-  }
+@misc{kandala2024pix2gif,
+      title={Pix2Gif: Motion-Guided Diffusion for GIF Generation}, 
+      author={Hitesh Kandala and Jianfeng Gao and Jianwei Yang},
+      year={2024},
+      eprint={2403.04634},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
